@@ -1,0 +1,26 @@
+nginx:
+  image: metalguardian/nginx
+  ports:
+    - 80:80
+  links:
+    - php:php
+  volumes_from:
+    - php:ro
+  restart: always
+  volumes:
+    - ./data/nginx.default.conf:/etc/nginx/conf.d/default.conf:ro
+mysql:
+  image: metalguardian/mysql:5.7
+  environment:
+    MYSQL_ROOT_PASSWORD: ""
+    MYSQL_ALLOW_EMPTY_PASSWORD: "1"
+  restart: always
+  volumes:
+    - /opt/mysql:/var/lib/mysql
+php:
+  image: metalguardian/php-fpm
+  volumes:
+    - /web:/web
+  restart: always
+  links:
+    - mysql:mysql
